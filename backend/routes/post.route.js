@@ -8,7 +8,8 @@ import {
     getAllPosts,
     getFollowingPosts,
     getLikedPosts,
-    getUserPosts
+    getUserPosts,
+    getOnePost
      } from '../controllers/post.controller.js';
 
 const router = express.Router();
@@ -20,6 +21,7 @@ router.get('/user/:username', protectRoute, getUserPosts);
 router.post('/create', protectRoute, createPost);
 router.post('/like/:id', protectRoute, likeUnlike);
 router.post('/comment/:id', protectRoute, commentOnPost);
+router.get('/commented/:id', protectRoute, getOnePost)
 router.delete('/:id', protectRoute, deletePost);
 
 

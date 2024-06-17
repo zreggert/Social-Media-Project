@@ -82,9 +82,9 @@ export const commentOnPost = async (req, res) => {
         const comment = { user: userId, text };
 
         post.comments.push(comment);
-        await post.save();
+        const updatedPost = await post.save();
 
-        res.status(200).json(post);
+        res.status(200).json(updatedPost);
     } catch (error) {
         console.log("Error in the commentOnPost controller", error);
         res.status(500).json({ error: "Internal Server Error"});
@@ -231,5 +231,20 @@ export const getUserPosts = async (req, res) => {
     } catch (error) {
         console.log("Error in getUserPosts controller", error);
         res.status(500).json({ error: "Internal Server Error"});
+    }
+};
+
+export const getOnePost = async (req, res) => {
+    try {
+        const { postId } = req.params
+        const post = await Post.findOne({ postId }).select("-password")
+        if (!post) {
+            return res.status(404).json({ message: "Post not found"})
+        }
+        res.status(200).json(post);
+        
+    } catch (error) {
+        console.log("Error in getAllPosts controller", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };

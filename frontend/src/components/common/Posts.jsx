@@ -39,6 +39,8 @@ const Posts = ({feedType}) => {
 		refetch();
 	}, [feedType, refetch]) 
 
+
+
 	return (
 		<>
 			{isLoading || isRefetching && (
