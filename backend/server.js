@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
-app.use('/api/notif', notifRoutes);
+app.use('/api/notifications', notifRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server Is running on port ${PORT}`);
