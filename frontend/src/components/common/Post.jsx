@@ -28,6 +28,32 @@ const Post = ({ post }) => {
 
 	const formattedDate = formatPostDate(post.createAt);
 
+	// const getPostId = () => {
+		
+	// 	const postId = post._id
+
+	// 	return postId
+	// }
+
+	// const {data: postData }= useQuery({
+	// 	queryKey: ['post'],
+	// 	queryFn: async () => {
+	// 		try {
+	// 			const res = await fetch(`/api/post/commented/${getPostId()}`);
+	// 			const data = await res.json();
+
+	// 			if (!res.ok) throw new Error(data.error || "Something went wrong");
+				
+	// 			console.log("Post data console log", data)
+	// 			return data;
+
+	// 		} catch (error) {
+	// 			throw new Error(error)
+	// 		}
+	// 	}
+		
+	// })
+
 	const {mutate: deletePost, isPending: isDeleting } = useMutation({
 		mutationFn: async () => {
 			try {
@@ -105,22 +131,22 @@ const Post = ({ post }) => {
 				throw new Error(error.message)
 			}
 		},
-		onSuccess: () => {
+		onSuccess: (post) => {
 			toast.success("Successfully commented on the post");
 			setComment("")
-			// queryClient.setQueryData(['post'], (oldData) => {
-
-			// 	console.log(oldData)
-				// return oldData.map((p)=> {
-				// 	if (p._id === post._id) {
-				// 		console.log(post.comments)
-				// 		return { ...p, comments: post.comments }
-				// 	}
-				// 	return p;
-				// })
-			//})
+			queryClient.setQueryData(['posts'], (oldData) => {
+				//so close to being right. the last comment on the post is still not returning populated
+				console.log(oldData)
+				return oldData.map((p)=> {
+					if (p._id === post._id) {
+						console.log(post.comments)
+						return { ...p, comments: post.comments }
+					}
+					return p;
+				})
+			})
 			// again, not best UX
-			queryClient.invalidateQueries({ queryKey: ['posts'] })
+			// queryClient.invalidateQueries({ queryKey: ['posts'] })
 
 			// queryClient.setQueryData(['posts'], (oldData) => {
 			// 	for (let key in oldData) {
@@ -131,7 +157,8 @@ const Post = ({ post }) => {
 			// 	}
 			// 	console.log(oldData)
 			// })
-			console.log()
+			
+			
 			
 		},
 		onError: (error) => {
@@ -139,29 +166,6 @@ const Post = ({ post }) => {
 		}
 	});
 
-	
-
-	// const {data: postData, refetch }= useQuery({
-	// 	queryKey: ['post'],
-	// 	queryFn: async () => {
-	// 		try {
-	// 			const res = await fetch(`/api/post/commented/${postState._id}`);
-	// 			const data = await res.json();
-
-	// 			if (!res.ok) throw new Error(data.error || "Something went wrong");
-
-	// 			return data;
-
-	// 		} catch (error) {
-	// 			throw new Error(error)
-	// 		}
-	// 	}
-	// });
-
-	// useEffect(() => {
-	// 	refetch()
-	// 	setPostState(postData)
-	// }, [postData, refetch])
 
 	const handleDeletePost = () => {
 		deletePost();

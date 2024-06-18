@@ -73,7 +73,10 @@ export const commentOnPost = async (req, res) => {
             return res.status(400).json(({ error: "Text field is required" }));
         }
 
-        const post = await Post.findById(postId);
+        const post = await Post.findById(postId).populate({
+            path: "comments.user",
+            select: "-password"
+        })
 
         if(!post) {
             return res.status(404).json(({ error: "Post not found" }));
@@ -81,10 +84,12 @@ export const commentOnPost = async (req, res) => {
 
         const comment = { user: userId, text };
 
-        post.comments.push(comment);
-        const updatedPost = await post.save();
+        post.comments.push(comment)
+        await post.save();
 
-        res.status(200).json(updatedPost);
+        console.log("comment console log", post)
+
+        res.status(200).json(post)
     } catch (error) {
         console.log("Error in the commentOnPost controller", error);
         res.status(500).json({ error: "Internal Server Error"});
