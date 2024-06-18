@@ -3,7 +3,8 @@ import { BiRepost } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
-import {  useState } from "react";
+import { useState } from "react";
+// import { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from 'react-hot-toast';
@@ -12,9 +13,13 @@ import { formatPostDate } from "../../utils/date";
 
 const Post = ({ post }) => {
 	const [comment, setComment] = useState("");
-	
+
+	// const [post, setPostState] = useState(null);
+	// console.log("console logging post state", postState)
+
 	const {data: authUser} = useQuery({ queryKey: ['authUser'] });
 	const queryClient = useQueryClient();
+
 
 	const postOwner = post.user;
 	const isLiked = post.likes.includes(authUser._id)
@@ -103,15 +108,17 @@ const Post = ({ post }) => {
 		onSuccess: () => {
 			toast.success("Successfully commented on the post");
 			setComment("")
-			// queryClient.setQueryData(['posts'], (oldData) => {
-			// 	return oldData.map((p)=> {
-			// 		if (p._id === post._id) {
-			// 			console.log(post.comments)
-			// 			return { ...p, comments: post.comments }
-			// 		}
-			// 		return p;
-			// 	})
-			// })
+			// queryClient.setQueryData(['post'], (oldData) => {
+
+			// 	console.log(oldData)
+				// return oldData.map((p)=> {
+				// 	if (p._id === post._id) {
+				// 		console.log(post.comments)
+				// 		return { ...p, comments: post.comments }
+				// 	}
+				// 	return p;
+				// })
+			//})
 			// again, not best UX
 			queryClient.invalidateQueries({ queryKey: ['posts'] })
 
@@ -132,11 +139,13 @@ const Post = ({ post }) => {
 		}
 	});
 
-	// const {data: updatedPost }= useQuery({
-	// 	queryKey: ['updated'],
+	
+
+	// const {data: postData, refetch }= useQuery({
+	// 	queryKey: ['post'],
 	// 	queryFn: async () => {
 	// 		try {
-	// 			const res = await fetch(`/api/post/commented/${post._id}`);
+	// 			const res = await fetch(`/api/post/commented/${postState._id}`);
 	// 			const data = await res.json();
 
 	// 			if (!res.ok) throw new Error(data.error || "Something went wrong");
@@ -149,6 +158,10 @@ const Post = ({ post }) => {
 	// 	}
 	// });
 
+	// useEffect(() => {
+	// 	refetch()
+	// 	setPostState(postData)
+	// }, [postData, refetch])
 
 	const handleDeletePost = () => {
 		deletePost();

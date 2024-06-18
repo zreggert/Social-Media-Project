@@ -114,7 +114,7 @@ export const likeUnlike = async (req, res) => {
         } else {
             //Like post
             post.likes.push(userId);
-            await User.updateOne({ _id: userId }, { $push: { likePosts: postId } });
+            await User.updateOne({ _id: userId }, { $push: { likedPosts: postId } });
             await post.save();
 
             const notification = new Notification({
@@ -175,7 +175,7 @@ export const getLikedPosts = async (req, res) => {
                 path: "comments.user",
                 select: "-password",
             });
-        res.status(200).json({likedPosts});
+        res.status(200).json(likedPosts);
     
     } catch (error) {
         console.log("Error in getLikedPosts controller", error);
