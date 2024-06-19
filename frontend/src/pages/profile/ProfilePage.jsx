@@ -81,9 +81,6 @@ const ProfilePage = () => {
 		refetchUserPosts()
 	}, [username, refetch, refetchUserPosts])
 
-	// useEffect(() => {
-	// 	refetchUserPosts()
-	// }, [username, refetchUserPosts])
 
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];

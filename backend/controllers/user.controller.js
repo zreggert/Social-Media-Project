@@ -102,7 +102,11 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ message: "User not found"});
         }
         //if user wants to change their password
-        if ((!newPassword && currentPassword) || (currentPassword && newPassword)) {
+        if ((!newPassword && currentPassword) || (!currentPassword && newPassword)) {
+            return res.status(400).json({ error: "Please provide both current password and new password if you wish to update your profile password."})
+        }
+
+        if (currentPassword && newPassword){
             const isMatch = await bcrypt.compare(currentPassword, user.password);
             if (!isMatch) {
                 return res.status(400).json({ error: "Invalid Password" });
@@ -113,6 +117,7 @@ export const updateUser = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(newPassword, salt);
         }
+        
 
         //if user wants to change profile or cover img
         if (profileImg) {
